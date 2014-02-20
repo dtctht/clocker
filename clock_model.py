@@ -6,7 +6,7 @@ import math
 class clocker(Canvas):
     def __init__(self):
         self.master = Tk()
-        Canvas.__init__(self,self.master,width = 800, height = 800, bg = 'gray')
+        Canvas.__init__(self,self.master,width = 800, height = 800, bg = 'white')
         #self.master = Tk()
         #self.w = self (master, width=800, height = 800, bg='gray')
         self.create_oval(100,100,700,700)
@@ -21,18 +21,25 @@ class clocker(Canvas):
         #self.text.pack()
         self.lm.pack(side =BOTTOM)
         self.setNumber()
-        self.hour()
-        self.minute()
-        self.second()
+        #self.hour()
+        #self.minute()
+        #self.second()
+        self.modelTwo()
     #def setMonitor(self):
      #   self.sm.set ('----------------------- object view --------------------------')
-
+    def modelTwo(self):
+        print ('model two way!')
+        self.setTime()
+        self.create_line(self.h,fill='gray',width=20)
+        self.create_line(self.m,fill='gray',width=5)
+        self.create_line(self.s)
+        self.master.after(1000,self.modelTwo)
     def setNumber(self):
         print (self.s)
         ns = self.s #获得基准坐标，秒针最长，取得表针坐标用以绘制刻度
         sms = ('ns is initiated to: %s' % ns)
         self.sm.set(sms)
-        ws = float(30)
+        ws = float(50) #the length of the scale
         nsCut =[ns[0],ns[1],ns[2],ns[3]+ws]
         na = math.pi/6
         for char in 'kiss me baby':
@@ -93,7 +100,7 @@ class clocker(Canvas):
         self.s = self.getCoords(self.s,ssa)    #秒针新坐标
         ##设好新坐标后，无需在调用setCoords绘制，主程序中hour(),minute(),second()会循环调用根据新的self.h|m|s值绘制表针
         return (self)
-##输入当前线段（表针）的当前坐标（x1,y1,x2,y2),以及偏转角，返回旋转后表针的坐标
+##输入当前线段（表针）的当前坐标（x1,y1,x2,y2),偏转角（相对于x轴正方向），返回旋转后表针的坐标
     def getCoords(self,cc,a):
         r = ( (cc[2] - cc[0]) ** 2 + (cc[3] - cc[1] ) ** 2 ) ** 0.5
         x = r * math.cos(a)
@@ -103,7 +110,7 @@ class clocker(Canvas):
         print ('get the coords of hand: %s' % cc)
         return (cc)
     def setCoords(self,cc,a, ww):
-            self.create_line(cc,fill="gray",width=ww)
+            self.create_line(cc,fill="white",width=ww)
             r = ( (cc[2] - cc[0]) ** 2 + (cc[3] - cc[1] ) ** 2 ) ** 0.5
             print('current R is:%8.4f' % r)
             print('angle is %8f'% a)
@@ -140,5 +147,7 @@ class clocker(Canvas):
             #w = Canvas(master)
             return (cc)
     def tick(self):
-        self.master.title(strftime('%H:%M:%S'))
+        #self.master.title(strftime('%H:%M:%S'))
+        self.master.title('Clock')
+        self.sm.set(strftime('%H:%M:%S'))
         self.master.after(1000,self.tick)
