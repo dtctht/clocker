@@ -35,10 +35,18 @@ class clocker(Canvas):
         ws = float(30)
         nsCut =[ns[0],ns[1],ns[2],ns[3]+ws]
         na = math.pi/6
-        ns = self.getCoords(ns,na)
-        nsCut = self.getCoords(nsCut,na)
-        nsNew = [nsCut[2],nsCut[3],ns[2],ns[3]]
-        self.create_line(nsNew,fill='black',width= 25)
+        for char in 'kiss me baby':
+            print (char)
+            print (ns)
+            na = na + math.pi/6
+            ns = self.getCoords(ns,na)
+            print('after spin pi/6 ns is %s' % ns)
+            nsCut = self.getCoords(nsCut,na)
+            print(('after spin pi/6 nsCut is %s' % nsCut))
+            nsNew = [nsCut[2],nsCut[3],ns[2],ns[3]]
+            print(nsNew)
+            self.create_line(nsNew,fill='black',width = 25)
+            self.create_line(nsNew,fill='white',width = 1)
 
 
     def second(self):
