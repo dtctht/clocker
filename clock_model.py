@@ -9,8 +9,10 @@ class clocker(Canvas):
         Canvas.__init__(self,self.master,width = 800, height = 800, bg = 'white')
         #self.master = Tk()
         #self.w = self (master, width=800, height = 800, bg='gray')
+        self.r = (400,400,400,100)
         self.create_oval(100,100,700,700)
-        self.s = [400,400,400,100]
+        #self.create_oval(self.r)
+        self.s = [400,400,400,120]
         self.m = [400,400,400,200]
         self.h = [400,400,400,250]
 
@@ -20,6 +22,7 @@ class clocker(Canvas):
         #self.text = Text(self.master)
         #self.text.pack()
         self.lm.pack(side =BOTTOM)
+        self.setDial2()
         self.setNumber()
         #self.hour()
         #self.minute()
@@ -35,8 +38,8 @@ class clocker(Canvas):
         self.create_line(self.s)
         self.master.after(1000,self.modelTwo)
     def setNumber(self):
-        print (self.s)
-        ns = self.s #获得基准坐标，秒针最长，取得表针坐标用以绘制刻度
+        print (self.r)
+        ns = list(self.r) #获得基准坐标，秒针最长，取得表针坐标用以绘制刻度
         sms = ('ns is initiated to: %s' % ns)
         self.sm.set(sms)
         ws = float(50) #the length of the scale
@@ -54,6 +57,26 @@ class clocker(Canvas):
             print(nsNew)
             self.create_line(nsNew,fill='black',width = 25)
             self.create_line(nsNew,fill='white',width = 1)
+    def setDial2(self):
+        print (self.r)
+        ns = list(self.r) #获得基准坐标，秒针最长，取得表针坐标用以绘制刻度
+        sms = ('ns is initiated to: %s' % ns)
+        self.sm.set(sms)
+        ws = float(16) #the length of the scale
+        nsCut =[ns[0],ns[1],ns[2],ns[3]+ws]
+        na = math.pi/30
+        for i in range(60):
+            print (i)
+            print (ns)
+            na = na + math.pi/30
+            ns = self.getCoords(ns,na)
+            print('after spin pi/6 ns is %s' % ns)
+            nsCut = self.getCoords(nsCut,na)
+            print(('after spin pi/6 nsCut is %s' % nsCut))
+            nsNew = [nsCut[2],nsCut[3],ns[2],ns[3]]
+            print(nsNew)
+            self.create_line(nsNew,fill='gray',width = 16)
+            #self.create_line(nsNew,fill='white',width = 1)
 
 
     def second(self):
@@ -65,20 +88,18 @@ class clocker(Canvas):
         self.master.after(1000, self.second)
         #self.sm.set('secHand displayed?')
         #self.setMonitor()
-
     def minute(self):
         #global self.m
         x = math.pi/(30*60)
         self.m = self.setCoords(self.m,x,5)
-        minHand = self.create_line(self.m,fill='white',width=5)
+        minHand = self.create_line(self.m,fill='black',width=5)
         self.master.after(1000,self.minute)
         #self.sm.set('minute displayed?\n')
-
     def hour(self):
         #global self.h
         x = math.pi/(30*60*12)
         self.h = self.setCoords(self.h,x,20)
-        hrHand = self.create_line(self.h,fill='white',width=20)
+        hrHand = self.create_line(self.h,fill='black',width=20)
         self.master.after(1000, self.hour)
         print('hour hand displayed?\n')
     def setTime(self):
