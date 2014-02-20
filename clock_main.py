@@ -3,13 +3,12 @@ from tkinter import *
 from clock_model import *
 import math
 
-def tick():
-    master.title(strftime('%H:%M:%S'))
-    master.after(1000,tick)
-master = Tk()
-master.title('Clock')
-tick()
-cl = clocker(master).setTime()
+
+#master = Tk()
+#master.title('Clock')
+cl = clocker().setTime()
+cl.tick()
 cl.pack()
+#cl.setMonitor()
 
 mainloop()

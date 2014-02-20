@@ -4,7 +4,7 @@ from time import *
 ##from clocker_hands import *
 import math
 class clocker(Canvas):
-    def __init__(self,master):
+    def __init__(self):
         self.master = Tk()
         Canvas.__init__(self,self.master,width = 800, height = 800, bg = 'gray')
         #self.master = Tk()
@@ -13,9 +13,34 @@ class clocker(Canvas):
         self.s = [400,400,400,100]
         self.m = [400,400,400,200]
         self.h = [400,400,400,250]
+
+        self.sm = StringVar()
+        #self.sm.set('waht\'s up!\n')
+        self.lm = Label(self.master,text= 'what\'s up', textvariable = self.sm)
+        #self.text = Text(self.master)
+        #self.text.pack()
+        self.lm.pack(side =BOTTOM)
+        self.setNumber()
         self.hour()
         self.minute()
         self.second()
+    #def setMonitor(self):
+     #   self.sm.set ('----------------------- object view --------------------------')
+
+    def setNumber(self):
+        print (self.s)
+        ns = self.s #获得基准坐标，秒针最长，取得表针坐标用以绘制刻度
+        sms = ('ns is initiated to: %s' % ns)
+        self.sm.set(sms)
+        ws = float(30)
+        nsCut =[ns[0],ns[1],ns[2],ns[3]+ws]
+        na = math.pi/6
+        ns = self.getCoords(ns,na)
+        nsCut = self.getCoords(nsCut,na)
+        nsNew = [nsCut[2],nsCut[3],ns[2],ns[3]]
+        self.create_line(nsNew,fill='black',width= 25)
+
+
     def second(self):
         #global self.s
         #master.title(strftime('%H:%M:%S'))
@@ -23,25 +48,28 @@ class clocker(Canvas):
         self.s = self.setCoords(self.s,x,1)
         secHand = self.create_line(self.s)
         self.master.after(1000, self.second)
-        print ('I am secHand, am I visible??\n')
+        #self.sm.set('secHand displayed?')
+        #self.setMonitor()
+
     def minute(self):
         #global self.m
         x = math.pi/(30*60)
         self.m = self.setCoords(self.m,x,5)
         minHand = self.create_line(self.m,fill='white',width=5)
         self.master.after(1000,self.minute)
-        print('minute displayed?\n')
+        #self.sm.set('minute displayed?\n')
+
     def hour(self):
         #global self.h
         x = math.pi/(30*60*12)
         self.h = self.setCoords(self.h,x,20)
-        hrHand = self.create_line(self.h,fill='blue',width=20)
+        hrHand = self.create_line(self.h,fill='white',width=20)
         self.master.after(1000, self.hour)
         print('hour hand displayed?\n')
     def setTime(self):
-        self.h = self.setCoords(self.h,0,20)    #清楚初始化绘制的时针
-        self.m = self.setCoords(self.m,0,5)     #清楚初始化绘制的分针
-        self.s = self.setCoords(self.s,0,1)     #清楚初始化绘制的秒针
+        self.h = self.setCoords(self.h,0,20)    #清除初始化绘制的时针
+        self.m = self.setCoords(self.m,0,5)     #清除初始化绘制的分针
+        self.s = self.setCoords(self.s,0,1)     #清除初始化绘制的秒针
         sTime = strftime('%H:%M:%S')
         sTime = sTime.split(':')
         hh = int(sTime[0])
@@ -56,9 +84,8 @@ class clocker(Canvas):
         self.m = self.getCoords(self.m,mma)    #分针新坐标
         self.s = self.getCoords(self.s,ssa)    #秒针新坐标
         ##设好新坐标后，无需在调用setCoords绘制，主程序中hour(),minute(),second()会循环调用根据新的self.h|m|s值绘制表针
-
         return (self)
-
+##输入当前线段（表针）的当前坐标（x1,y1,x2,y2),以及偏转角，返回旋转后表针的坐标
     def getCoords(self,cc,a):
         r = ( (cc[2] - cc[0]) ** 2 + (cc[3] - cc[1] ) ** 2 ) ** 0.5
         x = r * math.cos(a)
@@ -103,6 +130,7 @@ class clocker(Canvas):
 
             print ('after spin, R is %8f\n' % r)
             #w = Canvas(master)
-
-
             return (cc)
+    def tick(self):
+        self.master.title(strftime('%H:%M:%S'))
+        self.master.after(1000,self.tick)
