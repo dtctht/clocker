@@ -84,8 +84,8 @@ class clocker(Canvas):
         mm = int(sTime[1])
         ss = int (sTime[2])
         print('Current time is: %s'% sTime)
-        hha = math.pi * 2 * (hh % 12) / 12 - math.pi/2 #时针偏离基准（x轴正方向)的角度
-        mma = math.pi * 2 * mm / 60 - math.pi/2 #分针偏离基准（x轴正方向)的角度
+        hha = math.pi * 2 *( (hh % 12) / 12 + mm/(60*12) + ss/(60*60*12))- math.pi/2 #时针偏离基准（x轴正方向)的角度
+        mma = math.pi * 2 * (mm + ss/60)/60- math.pi/2 #分针偏离基准（x轴正方向)的角度
         ssa = math.pi * 2 * ss / 60 - math.pi/2 #秒针偏离基准（x轴正方向)的角度
         print (hha, mma, ssa)
         self.h = self.getCoords(self.h,hha)    #时针新坐标
