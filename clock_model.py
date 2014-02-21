@@ -15,6 +15,9 @@ class clocker(Canvas):
         self.s = [400,400,400,120]
         self.m = [400,400,400,200]
         self.h = [400,400,400,250]
+        gTime = strftime('%H:%M:%S')
+        gTime = gTime.split(':')
+        self.curs = gTime[2]
 
         self.sm = StringVar()
         #self.sm.set('waht\'s up!\n')
@@ -22,21 +25,23 @@ class clocker(Canvas):
         #self.text = Text(self.master)
         #self.text.pack()
         self.lm.pack(side =BOTTOM)
-        self.setDial2()
-        self.setNumber()
+    #model one, spin the hand by angle a (e.g pi/30 for second hand) every second
         #self.hour()
         #self.minute()
-        #self.second()
+        #self.secon
         self.modelTwo()
-    #def setMonitor(self):
-     #   self.sm.set ('----------------------- object view --------------------------')
+    ##init the clock face
+        self.setDial2()
+        self.setNumber()
     def modelTwo(self):
-        print ('model two way!')
+        print ('Another way to come up!')
+        self.sm.set(strftime('%H:%M:%S'))
         self.setTime()
         self.create_line(self.h,fill='gray',width=20)
         self.create_line(self.m,fill='gray',width=5)
-        self.create_line(self.s)
-        self.master.after(1000,self.modelTwo)
+        self.create_line(self.s)#,fill='gray',width=1)
+        #self.curs = self.getTimeChange()
+        self.master.after(999,self.modelTwo)
     def setNumber(self):
         print (self.r)
         ns = list(self.r) #获得基准坐标，秒针最长，取得表针坐标用以绘制刻度
@@ -50,9 +55,9 @@ class clocker(Canvas):
             print (ns)
             na = na + math.pi/6
             ns = self.getCoords(ns,na)
-            print('after spin pi/6 ns is %s' % ns)
+            print('after rotate pi/6 ns is %s' % ns)
             nsCut = self.getCoords(nsCut,na)
-            print(('after spin pi/6 nsCut is %s' % nsCut))
+            print(('after rotate pi/6 nsCut is %s' % nsCut))
             nsNew = [nsCut[2],nsCut[3],ns[2],ns[3]]
             print(nsNew)
             self.create_line(nsNew,fill='black',width = 25)
@@ -77,8 +82,6 @@ class clocker(Canvas):
             print(nsNew)
             self.create_line(nsNew,fill='gray',width = 16)
             #self.create_line(nsNew,fill='white',width = 1)
-
-
     def second(self):
         #global self.s
         #master.title(strftime('%H:%M:%S'))
@@ -102,10 +105,22 @@ class clocker(Canvas):
         hrHand = self.create_line(self.h,fill='black',width=20)
         self.master.after(1000, self.hour)
         print('hour hand displayed?\n')
+
+    def getTimeChange(self): #扫描当前时间，当秒变化时，调用setTime，刷新表盘
+        gTime = strftime('%H:%M:%S')
+        gTime = gTime.split(':')
+        count = 0
+        while gTime[2] == self.curs:
+            gTime = strftime('%H:%M:%S')
+            gTime = gTime.split(':')
+            print(gTime)
+            count = count + 1
+        print('Count is : %d' % count)
+        return (gTime[2])
     def setTime(self):
-        self.h = self.setCoords(self.h,0,20)    #清除初始化绘制的时针
-        self.m = self.setCoords(self.m,0,5)     #清除初始化绘制的分针
-        self.s = self.setCoords(self.s,0,1)     #清除初始化绘制的秒针
+        self.h = self.setCoords(self.h,0,20)    #清除本次调用前时针轨迹
+        self.m = self.setCoords(self.m,0,5)     #清除本次调用前分针轨迹
+        self.s = self.setCoords(self.s,0,1)     #清除本次调用前秒针轨迹
         sTime = strftime('%H:%M:%S')
         sTime = sTime.split(':')
         hh = int(sTime[0])
@@ -130,6 +145,7 @@ class clocker(Canvas):
         cc[3]=y+cc[1]
         print ('get the coords of hand: %s' % cc)
         return (cc)
+    #输入当前表针起始坐标cc、旋转角a，和表针粗细ww,返回表针旋转后的坐标（线段起始坐标）
     def setCoords(self,cc,a, ww):
             self.create_line(cc,fill="white",width=ww)
             r = ( (cc[2] - cc[0]) ** 2 + (cc[3] - cc[1] ) ** 2 ) ** 0.5
@@ -161,14 +177,11 @@ class clocker(Canvas):
             print("new a is: %f" % a)
             cc[2] = cc[0] + r * math.cos(a)
             cc[3] = cc[1] + r * math.sin(a)
-
-            print(cc)
-
             print ('after spin, R is %8f\n' % r)
-            #w = Canvas(master)
+            print(cc)
             return (cc)
     def tick(self):
         #self.master.title(strftime('%H:%M:%S'))
         self.master.title('Clock')
-        self.sm.set(strftime('%H:%M:%S'))
-        self.master.after(1000,self.tick)
+        #self.sm.set(strftime('%H:%M:%S'))
+        #self.master.after(1000,self.tick)
