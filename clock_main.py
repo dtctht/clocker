@@ -4,11 +4,8 @@ from clock_model import *
 import math
 
 
-#master = Tk()
-#master.title('Clock')
-cl = clocker().setTime()
+##简单时钟演示程序。主要功能实现均在Class中
+cl = clocker()
 cl.tick()
 cl.pack()
-#cl.setMonitor()
-
 mainloop()
